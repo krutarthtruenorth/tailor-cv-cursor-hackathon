@@ -14,13 +14,148 @@ import type { TailorCvResponse } from "@/lib/types";
 
 const loadingSteps = [0, 1, 2, 3];
 
-const starterResume = `Alex Johnson\nSenior Product Designer\n\nExperience\n- Led end-to-end design for B2B workflow products used by 30,000+ customers.\n- Partnered with PM and engineering to launch onboarding improvements that increased activation by 18%.\n- Built and maintained a design system across web and mobile surfaces.\n\nSkills\nFigma, UX Research, Product Strategy, Design Systems, Cross-functional Collaboration`;
+const demoScenarios = [
+  {
+    id: "product-designer",
+    label: "Senior Product Designer",
+    resume: `Maya Chen
+Senior Product Designer
+Toronto, ON
+maya.chen@email.com | linkedin.com/in/mayachen
 
-const starterJob = `We are hiring a Senior Product Designer to improve our AI recruiting platform. The ideal candidate has experience with user research, design systems, SaaS dashboards, experimentation, stakeholder communication, ATS workflows, and shipping measurable product improvements. Familiarity with AI-assisted writing tools, analytics, and cross-functional collaboration is required.`;
+Summary
+Product designer with 6+ years of experience designing SaaS products for B2B teams. Strong background in user research, design systems, prototyping, and cross-functional collaboration.
+
+Experience
+Senior Product Designer
+Northstar Software
+2022 – Present
+- Led redesign of onboarding flows for a workflow platform used by 25,000+ users.
+- Partnered with PMs and engineers to improve activation and reduce drop-off in early user journeys.
+- Built reusable design system components for dashboard and form experiences.
+- Conducted user interviews and usability tests to inform product improvements.
+
+Product Designer
+Pixel Foundry
+2019 – 2022
+- Designed web and mobile experiences for SaaS and e-commerce clients.
+- Created wireframes, prototypes, and high-fidelity UI in Figma.
+- Worked closely with developers to ship polished product features.
+
+Skills
+Figma, Design Systems, User Research, Prototyping, Usability Testing, SaaS, Cross-functional Collaboration`,
+    jobDescription: `We are hiring a Senior Product Designer to join our AI recruiting platform team. You will own key user journeys across employer dashboards and applicant workflows. The ideal candidate has experience with SaaS dashboards, experimentation, analytics, design systems, stakeholder communication, and improving product outcomes through research and iteration.
+
+Responsibilities:
+- Design end-to-end user experiences for recruiting workflows
+- Partner with product, engineering, and leadership teams
+- Use research and analytics to improve user outcomes
+- Contribute to and evolve the design system
+- Support experimentation and hypothesis-driven product decisions
+
+Qualifications:
+- 5+ years of product design experience
+- Strong portfolio of SaaS product work
+- Experience with dashboards, research, and metrics-driven design
+- Excellent communication and collaboration skills`,
+  },
+  {
+    id: "software-engineer",
+    label: "Full-Stack Software Engineer",
+    resume: `Daniel Rivera
+Full-Stack Software Engineer
+Calgary, AB
+daniel.rivera@email.com | github.com/danielrivera
+
+Summary
+Software engineer with 5 years of experience building web applications using React, Node.js, TypeScript, and SQL. Focused on shipping reliable features, improving application performance, and collaborating across product teams.
+
+Experience
+Software Engineer
+BrightLayer Tech
+2021 – Present
+- Built internal tools and customer-facing product features using React and Node.js.
+- Developed REST APIs and database-backed workflows for account management features.
+- Improved page performance and reduced API response times through backend optimizations.
+- Collaborated with design and product teams to deliver roadmap features.
+
+Junior Software Engineer
+CloudSpark
+2019 – 2021
+- Maintained frontend features in React and backend services in Express.
+- Wrote unit tests and fixed production bugs across the platform.
+- Participated in code reviews and sprint planning.
+
+Skills
+TypeScript, JavaScript, React, Node.js, Express, PostgreSQL, REST APIs, Git, Testing`,
+    jobDescription: `We are seeking a Full-Stack Engineer to help build and scale our AI-powered hiring platform. You will work across frontend and backend systems to deliver product features, improve system reliability, and support integrations.
+
+Responsibilities:
+- Build product features using Next.js, TypeScript, and backend APIs
+- Design scalable services and database-backed workflows
+- Collaborate with product, design, and data teams
+- Improve testing, observability, and deployment workflows
+- Contribute to performance and reliability initiatives
+
+Qualifications:
+- 4+ years of full-stack engineering experience
+- Strong TypeScript and React experience
+- Experience with Next.js, PostgreSQL, and cloud deployment
+- Familiarity with observability, CI/CD, and system design
+- Strong communication and ownership mindset`,
+  },
+  {
+    id: "growth-marketing-manager",
+    label: "Growth Marketing Manager",
+    resume: `Priya Shah
+Growth Marketing Manager
+Vancouver, BC
+priya.shah@email.com | linkedin.com/in/priyashah
+
+Summary
+Growth marketer with 7 years of experience leading lifecycle, acquisition, and content campaigns for SaaS companies. Strong track record in campaign strategy, cross-functional execution, and performance analysis.
+
+Experience
+Growth Marketing Manager
+LaunchLoop
+2021 – Present
+- Owned multi-channel acquisition campaigns across paid social, email, and content.
+- Improved trial-to-paid conversion through lifecycle optimization and messaging tests.
+- Partnered with product and sales teams on go-to-market launches.
+- Built weekly reporting dashboards to monitor campaign performance.
+
+Marketing Manager
+ScaleHouse
+2018 – 2021
+- Managed email campaigns, landing pages, and webinar funnels.
+- Supported SEO and content strategy for demand generation initiatives.
+- Analyzed campaign metrics and reported on funnel performance.
+
+Skills
+Lifecycle Marketing, Paid Social, Email Marketing, Content Strategy, SEO, Analytics, Conversion Optimization, Campaign Reporting`,
+    jobDescription: `We are hiring a Growth Marketing Manager to accelerate customer acquisition for our career technology platform. This role will own lifecycle strategy, paid acquisition experiments, landing page performance, funnel reporting, and cross-functional GTM execution.
+
+Responsibilities:
+- Own growth campaigns across paid, lifecycle, and content
+- Run experiments to improve conversion rates
+- Build and analyze funnel performance reporting
+- Partner with product, design, and sales on GTM initiatives
+- Improve landing page messaging and channel efficiency
+
+Qualifications:
+- 5+ years in growth or demand generation roles
+- Experience with experimentation, attribution, and performance analytics
+- Strong lifecycle and paid acquisition background
+- Comfortable working cross-functionally in a fast-paced SaaS environment`,
+  },
+] as const;
+
+const defaultScenario = demoScenarios[0];
 
 export function DashboardShell() {
-  const [resume, setResume] = useState(starterResume);
-  const [jobDescription, setJobDescription] = useState(starterJob);
+  const [selectedScenario, setSelectedScenario] = useState<(typeof demoScenarios)[number]["id"]>(defaultScenario.id);
+  const [resume, setResume] = useState(defaultScenario.resume);
+  const [jobDescription, setJobDescription] = useState(defaultScenario.jobDescription);
   const [result, setResult] = useState<TailorCvResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -38,6 +173,17 @@ export function DashboardShell() {
   }, [isLoading]);
 
   const canSubmit = useMemo(() => resume.trim().length > 0 && jobDescription.trim().length > 0, [resume, jobDescription]);
+
+  function handleScenarioChange(nextScenarioId: string) {
+    const scenario = demoScenarios.find((item) => item.id === nextScenarioId);
+    if (!scenario) return;
+
+    setSelectedScenario(scenario.id);
+    setResume(scenario.resume);
+    setJobDescription(scenario.jobDescription);
+    setResult(null);
+    setError(null);
+  }
 
   async function handleGenerate() {
     if (!canSubmit || isLoading) {
@@ -109,6 +255,22 @@ export function DashboardShell() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-5">
+              <div className="space-y-3">
+                <label className="text-sm font-semibold uppercase tracking-[0.18em] text-[color:var(--muted-foreground)]">
+                  Demo Scenario
+                </label>
+                <select
+                  value={selectedScenario}
+                  onChange={(event) => handleScenarioChange(event.target.value)}
+                  className="flex h-12 w-full rounded-2xl border border-[color:var(--border)] bg-white px-4 py-2 text-sm text-[color:var(--foreground)] shadow-sm outline-none transition focus-visible:border-[color:var(--ring)] focus-visible:ring-4 focus-visible:ring-[color:var(--ring-soft)]"
+                >
+                  {demoScenarios.map((scenario) => (
+                    <option key={scenario.id} value={scenario.id}>
+                      {scenario.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
               <div className="space-y-3">
                 <label className="text-sm font-semibold uppercase tracking-[0.18em] text-[color:var(--muted-foreground)]">
                   Current Resume
