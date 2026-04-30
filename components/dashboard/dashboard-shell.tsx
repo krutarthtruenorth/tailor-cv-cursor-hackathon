@@ -154,8 +154,8 @@ const defaultScenario = demoScenarios[0];
 
 export function DashboardShell() {
   const [selectedScenario, setSelectedScenario] = useState<(typeof demoScenarios)[number]["id"]>(defaultScenario.id);
-  const [resume, setResume] = useState(defaultScenario.resume);
-  const [jobDescription, setJobDescription] = useState(defaultScenario.jobDescription);
+  const [resume, setResume] = useState<string>(defaultScenario.resume);
+  const [jobDescription, setJobDescription] = useState<string>(defaultScenario.jobDescription);
   const [result, setResult] = useState<TailorCvResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
