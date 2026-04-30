@@ -2,6 +2,8 @@
 
 **AI-powered resume tailoring for job seekers.** Paste a resume and a job description to generate a role-specific resume, ATS score, missing keywords, improved bullet points, and a custom cover letter in one flow.
 
+**Live Demo:** https://tailor-cv-cursor-hackathon-k6x9.vercel.app/
+
 ## Problem
 
 Applying to jobs is repetitive and slow.
